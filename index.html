@@ -85,6 +85,8 @@ sup{font-size:.55em;color:var(--text-3);font-weight:500}
 .btn-primary:hover{background:var(--orange-bright);transform:scale(1.04);box-shadow:0 10px 44px rgba(245,99,0,.4)}
 .btn-link{color:var(--orange);font-size:16px;padding:13px 6px}
 .btn-link:hover{text-decoration:underline}
+.btn-ghost{border:1px solid rgba(255,255,255,.18);color:var(--text)}
+.btn-ghost:hover{border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.05);transform:scale(1.04)}
 @keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
 
 /* ---------------- Card rails (Apple gallery) ---------------- */
@@ -145,6 +147,11 @@ sup{font-size:.55em;color:var(--text-3);font-weight:500}
 .spec-stat .n.o{background:var(--grad-orange);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .spec-stat .l{font-size:12.5px;color:var(--text-3);margin-top:2px;max-width:130px}
 .spec-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.spec-wide{grid-column:1/-1}
+.spec-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.pill-live{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#30d158;background:rgba(48,209,88,.12);padding:4px 12px;border-radius:980px}
+.spec-link{margin-top:22px;font-size:15px;font-weight:600;color:var(--orange)}
+.spec-link:hover{text-decoration:underline}
 
 /* ---------------- Compare-style education ---------------- */
 .edu-row{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:60px}
@@ -208,6 +215,7 @@ footer{padding:24px 22px 44px;text-align:center;color:var(--text-3);font-size:12
   <p class="hero-sub">Code-intelligence research at UNC Charlotte. Real-time pipelines in banking IT. Machine learning that runs on a Raspberry Pi — and a UAV that actually flew.</p>
   <div class="hero-actions">
     <a class="btn btn-primary" href="#contact">Get in touch</a>
+    <a class="btn btn-ghost" href="Rishik_Kasula_Resume.pdf" download>Download Résumé</a>
     <a class="btn btn-link" href="#highlights">Get the highlights&nbsp;›</a>
   </div>
   <div class="hero-portrait" id="heroPortrait">
@@ -296,6 +304,23 @@ footer{padding:24px 22px 44px;text-align:center;color:var(--text-3);font-size:12
       <p class="chapter-intro">Every project here reached a <b>working result</b> — a research pipeline, an offline ML checkout, a faster feature-selection algorithm, and an aircraft with four flight tests in its logbook.</p>
     </div>
     <div class="spec-grid">
+      <div class="spec spec-wide reveal">
+        <div class="spec-kicker">Machine Learning · Live on GitHub</div>
+        <div class="spec-head"><h3>fraudscore</h3><span class="pill-live">Shipped · v1.0.0</span></div>
+        <div class="tag-line">Fraud decisions in dollars. Not accuracy.</div>
+        <p>A calibrated card-fraud scoring service that prices every decision: a transaction is
+        reviewed when <b>fraud probability × amount</b> exceeds the cost of reviewing it. Served
+        over FastAPI, evaluated on a chronological hold-out in dollars with bootstrap confidence
+        intervals. One honest finding worth reading: <b>a plain logistic model beat gradient
+        boosting</b> under honest chronological evaluation.</p>
+        <div class="spec-stats">
+          <div class="spec-stat"><div class="n o">$84.87</div><div class="l">saved per 10k transactions vs the best single threshold<sup>3</sup></div></div>
+          <div class="spec-stat"><div class="n">~13%</div><div class="l">cheaper than the single-threshold policy</div></div>
+          <div class="spec-stat"><div class="n">v1.0.0</div><div class="l">released · CI green · MIT</div></div>
+        </div>
+        <div class="spec-chips"><span class="chip">Python</span><span class="chip">scikit-learn</span><span class="chip">FastAPI</span><span class="chip">DuckDB</span><span class="chip">Docker</span><span class="chip">Bootstrap CIs</span></div>
+        <a class="spec-link" href="https://github.com/RISHIKKASULA/fraudscore" target="_blank" rel="noopener">View code ›</a>
+      </div>
       <div class="spec reveal">
         <div class="spec-kicker">Code intelligence</div>
         <h3>RefExp</h3>
@@ -340,6 +365,20 @@ footer{padding:24px 22px 44px;text-align:center;color:var(--text-3);font-size:12
         </div>
         <div class="spec-chips"><span class="chip">Arduino</span><span class="chip">Embedded C</span><span class="chip">FPV / RF</span></div>
       </div>
+    </div>
+
+    <div class="role reveal">
+      <div class="role-date">Case study · fraudscore</div>
+      <h3>The right threshold is a price.</h3>
+      <div class="org">ULB card-fraud dataset · 284,807 transactions, 0.172% fraud · chronological train/calibrate/test split</div>
+      <div class="tiles">
+        <div class="tile"><span class="lead">Problem.</span> Most fraud models ship an uncalibrated score and a 0.5 threshold. But a missed $800 fraud and a missed $8 fraud are not the same mistake — <b>accuracy can't see the difference; dollars can.</b></div>
+        <div class="tile"><span class="lead">Approach.</span> Train plain, calibrate on a held-out split, then decide per transaction: review when <b>p̂ × amount ≥ the $10 review cost</b>. No fitted threshold — the economics are the threshold. A tuned single-threshold policy serves as the baseline.</div>
+        <div class="tile"><span class="lead">Measured result.</span> The amount-aware rule saved <b>$84.87 per 10,000 transactions</b> against the best single-threshold baseline — about 13% cheaper — with a bootstrap 95% CI of <b>$20.08 to $187.47</b>.<sup>3</sup> Wide interval, stated plainly: 492 frauds is a small sample, and pretending otherwise would be the real error.</div>
+        <div class="tile"><span class="lead">The honest finding.</span> Under chronological evaluation, <b>plain logistic regression beat gradient boosting</b>. Boring models with honest evaluation over exciting models with leaky evaluation — that result stayed in the README.</div>
+      </div>
+      <div class="tile-chips" style="margin-top:26px"><span class="chip">Isotonic / Platt calibration</span><span class="chip">Expected-cost decisions</span><span class="chip">Cluster bootstrap</span><span class="chip">FastAPI serving</span></div>
+      <a class="spec-link" style="display:inline-block" href="https://github.com/RISHIKKASULA/fraudscore" target="_blank" rel="noopener">Read the code and eval report ›</a>
     </div>
   </div>
 </section>
@@ -426,6 +465,7 @@ footer{padding:24px 22px 44px;text-align:center;color:var(--text-3);font-size:12
 <div class="footnotes">
   <p>1. Contribution volume verified against git commit history (author-attributed commits, RefExp v1 repository), corroborated by the co-RA's integration commit.</p>
   <p>2. Internship credited as BIC4002 (10 credits) at VIT-AP University, graded S (Outstanding).</p>
+  <p>3. Measured on the held-out chronological test split of the ULB dataset; percentile bootstrap, B = 10,000, seeded. Full methodology and eval report in the fraudscore repository.</p>
 </div>
 <footer>© 2026 Rishik Kasula. Designed and built with care.</footer>
 
