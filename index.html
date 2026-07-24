@@ -48,9 +48,20 @@ sup{font-size:.55em;color:var(--text-3);font-weight:500}
 .localnav-menu{display:flex;align-items:center;gap:26px}
 .localnav-menu a{font-size:12px;color:var(--text-2);transition:color .25s}
 .localnav-menu a:hover{color:var(--text)}
-.localnav-cta{font-size:12px;font-weight:500;background:var(--orange);color:#fff;padding:5px 14px;border-radius:980px;transition:background .25s,transform .25s}
-.localnav-cta:hover{background:var(--orange-bright);transform:scale(1.05)}
-@media(max-width:860px){.localnav-menu a{display:none}}
+.localnav-cta{font-size:12px;font-weight:500;background:var(--orange);color:#fff;padding:5px 14px;border-radius:980px;opacity:0;pointer-events:none;transform:translateY(-6px);transition:opacity .4s,transform .4s,background .25s}
+.localnav-cta.show{opacity:1;pointer-events:auto;transform:none}
+.localnav-cta:hover{background:var(--orange-bright)}
+.menu-btn{display:none;width:44px;height:44px;border:none;background:none;cursor:pointer;padding:0;margin-right:-8px}
+.menu-btn span{display:block;width:18px;height:1.5px;background:var(--text);margin:5px auto;border-radius:2px;transition:transform .3s,opacity .3s}
+.menu-btn[aria-expanded="true"] span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.menu-btn[aria-expanded="true"] span:nth-child(2){opacity:0}
+.menu-btn[aria-expanded="true"] span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.mobile-menu{position:fixed;top:52px;left:0;right:0;z-index:199;background:rgba(10,10,10,.94);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--hairline);padding:8px 22px 16px;display:none}
+.mobile-menu.open{display:block}
+.mobile-menu a{display:block;padding:14px 4px;font-size:17px;font-weight:500;color:var(--text-2);border-bottom:1px solid var(--hairline)}
+.mobile-menu a:hover{color:var(--text)}
+.mobile-menu a.mm-cta{border-bottom:none;color:var(--orange);font-weight:600}
+@media(max-width:860px){.localnav-menu a{display:none}.localnav-menu a.localnav-cta{display:inline-block}.menu-btn{display:block}}
 
 /* ---------------- Type system ---------------- */
 .eyebrow{font-size:15px;font-weight:600;color:var(--orange);margin-bottom:12px}
@@ -72,16 +83,14 @@ sup{font-size:.55em;color:var(--text-3);font-weight:500}
 /* ---------------- Hero ---------------- */
 .hero{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;position:relative;padding:15vh 22px 0;overflow:hidden}
 .hero-glow{position:absolute;inset:0;pointer-events:none;background:
-  radial-gradient(ellipse 58% 34% at 50% 96%,rgba(245,99,0,.5),transparent 65%),
-  radial-gradient(ellipse 34% 22% at 50% 100%,rgba(255,146,48,.42),transparent 62%),
+  radial-gradient(ellipse 64% 40% at 50% 96%,rgba(245,99,0,.55),transparent 68%),
+  radial-gradient(ellipse 38% 26% at 50% 100%,rgba(255,146,48,.46),transparent 64%),
   radial-gradient(ellipse 55% 40% at 50% -10%,rgba(255,255,255,.05),transparent 60%)}
 .hero-portrait{position:relative;z-index:1;margin-top:42px;height:50svh;opacity:0;animation:riseUp 1.3s .85s cubic-bezier(.22,1,.36,1) forwards;will-change:transform}
 .hero-portrait img{height:100%;width:auto;display:block;
-  -webkit-mask-image:linear-gradient(#000 84%,transparent 99%);mask-image:linear-gradient(#000 84%,transparent 99%);
-  filter:drop-shadow(0 40px 90px rgba(245,99,0,.30))}
-.hero-portrait::before{content:'';position:absolute;left:50%;bottom:-4%;transform:translateX(-50%);width:170%;height:46%;background:radial-gradient(ellipse 50% 50% at 50% 60%,rgba(245,99,0,.34),transparent 70%);z-index:-1;filter:blur(6px)}
+  -webkit-mask-image:linear-gradient(#000 86%,transparent 99%);mask-image:linear-gradient(#000 86%,transparent 99%)}
 @keyframes riseUp{from{opacity:0;transform:translateY(60px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:640px){.hero{padding-top:12vh}.hero-portrait{height:42svh}}
+@media(max-width:640px){.hero{padding-top:12vh}.hero-portrait{height:46svh}}
 .hero h1{font-size:clamp(56px,10vw,128px);font-weight:800;letter-spacing:-.045em;line-height:1;opacity:0;animation:rise 1.1s .15s cubic-bezier(.22,1,.36,1) forwards}
 .hero h1 .orange{background:var(--grad-orange);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .hero-tag{margin-top:26px;font-size:clamp(20px,3vw,30px);font-weight:600;letter-spacing:-.02em;color:var(--text);opacity:0;animation:rise 1s .4s cubic-bezier(.22,1,.36,1) forwards}
@@ -227,22 +236,34 @@ footer{padding:24px 22px 44px;text-align:center;color:var(--text-3);font-size:12
       <a href="#certs">Certifications</a>
       <a class="localnav-cta" href="#contact">Get in touch</a>
     </div>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu"><span></span><span></span><span></span></button>
   </div>
 </nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#highlights">Highlights</a>
+  <a href="#experience">Experience</a>
+  <a href="#projects">Projects</a>
+  <a href="#skills">Skills</a>
+  <a href="#education">Education</a>
+  <a href="#certs">Certifications</a>
+  <a class="mm-cta" href="#contact">Get in touch ›</a>
+</div>
 
 <!-- ================= HERO ================= -->
 <header class="hero" id="top">
   <div class="hero-glow"></div>
   <h1>Rishik <span class="orange">Kasula</span></h1>
   <div class="hero-tag">ML &amp; data engineering. <span class="dim">Shipped and measured.</span></div>
-  <p class="hero-sub">Three shipped systems: fraud scoring priced in dollars, LLM extraction graded against SEC filings, and a streaming quality gate measured by what it prevents — every number traceable to a public repo.</p>
+  <p class="hero-sub">ML and data systems, measured honestly — in dollars, against SEC filings, by what they prevent. Every number on this site traces to a public repo.</p>
   <div class="hero-actions">
     <a class="btn btn-primary" href="#contact">Get in touch</a>
-    <a class="btn btn-ghost" href="Rishik_Kasula_Resume.pdf" download>Download Résumé</a>
+    <a class="btn btn-ghost" href="Rishik_Kasula_Resume.pdf" download>Download Resume</a>
     <a class="btn btn-link" href="#highlights">Get the highlights&nbsp;›</a>
   </div>
   <div class="hero-portrait" id="heroPortrait">
     <picture>
+      <source media="(max-width:640px)" srcset="portrait-mobile.webp" type="image/webp">
+      <source media="(max-width:640px)" srcset="portrait-mobile.png">
       <source srcset="portrait.webp" type="image/webp">
       <img src="portrait.png" alt="Rishik Kasula" fetchpriority="high">
     </picture>
@@ -557,6 +578,16 @@ if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
 
 // Stagger grid children
 document.querySelectorAll('.spec-grid,.tiles,.edu-row,.stat-row').forEach(g=>{[...g.children].forEach((c,i)=>c.style.transitionDelay=(i*70)+'ms')});
+
+// Mobile menu
+const mb=document.getElementById('menuBtn'),mm=document.getElementById('mobileMenu');
+mb.addEventListener('click',()=>{const o=mm.classList.toggle('open');mb.setAttribute('aria-expanded',o);mb.setAttribute('aria-label',o?'Close menu':'Open menu')});
+mm.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mm.classList.remove('open');mb.setAttribute('aria-expanded','false')}));
+
+// Nav CTA appears only after the hero (and its own Get-in-touch) scrolls away
+const navCta=document.querySelector('.localnav-cta');
+const ctaToggle=()=>{navCta.classList.toggle('show',scrollY>innerHeight*.55)};
+addEventListener('scroll',ctaToggle,{passive:true});ctaToggle();
 </script>
 </body>
 </html>
